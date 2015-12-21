@@ -140,3 +140,15 @@ function show_square(table, x, y)
 
 	return table
 end
+
+function count_hidden(table)
+	count = 0
+	for x = 1, #table do
+		for y = 1, #table[x] do
+			if not table[x][y].show then
+				count = count + 1
+			end
+		end
+	end
+	return count
+end

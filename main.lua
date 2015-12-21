@@ -31,6 +31,7 @@ function love.load()
 	}
 
 	game_active = true
+	game_won = false
 end
 
 function love.update(dt)
@@ -51,6 +52,12 @@ function love.mousepressed(x, y, button)
 				else
 					-- Show clicked square
 					board = show_square(board, board_x, board_y)
+					if count_hidden(board) == mines then
+						-- Win!
+						game_active = false
+						game_won = true 
+						board = show_all(board)
+					end
 				end
 			end
 
@@ -117,7 +124,11 @@ function love.draw()
 
  		love.graphics.setColor(0,0,0,255)
 		font = love.graphics.newFont("monofonto.ttf", 50)
-		love.graphics.printf("GAME OVER\nclick anywhere to restart", 0, love.window.getHeight()/2 - 50, love.window.getWidth(), "center")
+		if game_won then
+			love.graphics.printf("YOU WON!\nclick anywhere to restart", 0, love.window.getHeight()/2 - 50, love.window.getWidth(), "center")
+		else
+			love.graphics.printf("YOU LOST!\nclick anywhere to restart", 0, love.window.getHeight()/2 - 50, love.window.getWidth(), "center")
+		end
 
  	end	
 end
