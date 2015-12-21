@@ -2,9 +2,9 @@ require "board"
 
 function love.load()
 	-- game settings
-	board_width = 20
-	board_height = 20
-	mines = 10
+	board_width = 25
+	board_height = 25
+	mines = 40
 
 	-- create board
 	board = {}
@@ -55,20 +55,22 @@ function love.mousepressed(x, y, button)
 
 		if button == "l" then
 			if board_x > 0 and board_x <= board_width and board_y > 0 and board_y <= board_height then
-				if board[board_x][board_y].number == 9 then
-					-- clicked on mine, game over!
-					game_active = false
-					board = show_all(board)
-					game_end = os.time()
-				else
-					-- show clicked square
-					board = show_square(board, board_x, board_y)
-					if count_hidden(board) == mines then
-						-- all non-mines opened, win!
+				if not board[board_x][board_y].flag then
+					if board[board_x][board_y].number == 9 then
+						-- clicked on mine, game over!
 						game_active = false
-						game_won = true 
 						board = show_all(board)
 						game_end = os.time()
+					else
+						-- show clicked square
+						board = show_square(board, board_x, board_y)
+						if count_hidden(board) == mines then
+							-- all non-mines opened, win!
+							game_active = false
+							game_won = true 
+							board = show_all(board)
+							game_end = os.time()
+						end
 					end
 				end
 			end
@@ -97,8 +99,8 @@ function love.draw()
 
 	love.graphics.setColor(255,255,255,255)
 	font = love.graphics.newFont("monofonto.ttf", 40)
-	love.graphics.printf("Mines: " .. mines, 20, 10, love.window.getWidth()-40, "left")
-	love.graphics.printf("Time: " .. os.difftime(game_end, game_start), 20, 10, love.window.getWidth()-40, "right")
+	love.graphics.printf("Mines: " .. mines , 10, 10, love.window.getWidth()-20, "left")
+	love.graphics.printf("Time: " .. os.difftime(game_end, game_start), 10, 10, love.window.getWidth()-20, "right")
 
 
  	for x=1,board_width do
