@@ -1,6 +1,8 @@
 
 function init_board(table, t_width, t_height)
-	-- Init board
+	-- Init board 
+	-- All values set to {show = false, number = 0, flag = false}
+
 	for x = 1, t_width do
 		table[x] = {}
 		for y = 1, t_height do
@@ -12,7 +14,9 @@ function init_board(table, t_width, t_height)
 end
 
 function add_mines(table, nr_mines)
-	-- Add mines
+	-- Add mines randomly
+	-- A mine is defined as the number 9
+
 	if nr_mines > #table * #table[1] then
 		print("Error in add_mines: Too many mines for the board")
 		return table
@@ -30,7 +34,8 @@ function add_mines(table, nr_mines)
 end
 
 function count_mines(table)
-	-- Add numbers
+	-- Add numbers accoridng to the mines on the board
+
 	x_max = #table
 	y_max = #table[1]
 	for x = 1, x_max do
@@ -38,7 +43,6 @@ function count_mines(table)
 			if table[x][y].number ~= 9 then
 			    
 				m_count = 0
-
 
 				if y > 1 and table[x][y-1].number == 9 then
 					m_count = m_count + 1
@@ -81,6 +85,8 @@ function count_mines(table)
 end
 
 function print_table(table)
+	-- print the table to console
+
 	io.write("\n")
 	for x = 1, #table do
 		for y = 1, #table[x] do
@@ -92,6 +98,8 @@ function print_table(table)
 end
 
 function show_all(table)
+	-- set all squares on to shown
+
 	for x = 1, #table do
 		for y = 1, #table[x] do
 			table[x][y].show = true
@@ -103,38 +111,41 @@ end
 function show_square(table, x, y)
 	table[x][y].show = true
 	if table[x][y].number == 0 then
+		-- if square is 0, reqursively show all 
+		-- zero-squares that are connected to this one
+
 		x_max = #table
 		y_max = #table[1]
 
 		if x < x_max then
 			if y > 1 and not table[x+1][y-1].show then
-				table = show_square(table, x+1, y-1)
+				table = show_square(table, x+1, y-1) -- right up
 			end
 			if not table[x+1][y].show then
-				table = show_square(table, x+1, y)
+				table = show_square(table, x+1, y) -- right
 			end
 			if y < y_max and not table[x+1][y+1].show then
-				table = show_square(table, x+1, y+1)
+				table = show_square(table, x+1, y+1) -- right down
 			end
 		end
 
 		if x > 1 then
 			if y > 1 and not table[x-1][y-1].show then
-				table = show_square(table, x-1, y-1)
+				table = show_square(table, x-1, y-1) -- left up
 			end
 			if not table[x-1][y].show then
-				table = show_square(table, x-1, y)
+				table = show_square(table, x-1, y) -- left
 			end
 			if y < y_max and not table[x-1][y+1].show then
-				table = show_square(table, x-1, y+1)
+				table = show_square(table, x-1, y+1) -- left down
 			end
 		end
 
 		if y < y_max and not table[x][y+1].show then
-			table = show_square(table, x, y+1)
+			table = show_square(table, x, y+1) -- up
 		end
 		if y > 1 and not table[x][y-1].show then
-			table = show_square(table, x, y-1)
+			table = show_square(table, x, y-1) -- down
 		end
 	end
 
@@ -142,6 +153,8 @@ function show_square(table, x, y)
 end
 
 function count_hidden(table)
+	-- return the number of hidden squares
+	
 	count = 0
 	for x = 1, #table do
 		for y = 1, #table[x] do

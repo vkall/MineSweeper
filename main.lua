@@ -1,19 +1,22 @@
 require "board"
 
 function love.load()
+	-- game settings
 	board_width = 15
 	board_height = 15
 	mines = 20
 
+	-- create board
 	board = {}
 	board = init_board(board, board_width, board_height)
 	board = add_mines(board, mines)
 	board = count_mines(board)
 	print_table(board)
 
+	-- window settings
 	square_width = 25
 	square_height = 25
-	success = love.window.setMode((square_width*board_width)+10, (square_height*board_height)+10, {resizable=false})
+	love.window.setMode((square_width*board_width)+10, (square_height*board_height)+10, {resizable=false})
 
 	font = love.graphics.newFont("monofonto.ttf", 25)
 	love.graphics.setFont(font)
@@ -27,9 +30,10 @@ function love.load()
 		{150,0,150,255}, -- 6
 		{130,130,130,255}, -- 7
 		{150,0,0,255}, -- 8
-		{255,0,0,255}, -- Bomb
+		{255,0,0,255}, -- Mine
 	}
 
+	-- game states
 	game_active = true
 	game_won = false
 end
@@ -46,14 +50,14 @@ function love.mousepressed(x, y, button)
 		if button == "l" then
 			if board_x > 0 and board_x <= board_width and board_y > 0 and board_y <= board_height then
 				if board[board_x][board_y].number == 9 then
-					-- Bomb, game over
+					-- clicked on mine, game over
 					game_active = false
 					board = show_all(board)
 				else
-					-- Show clicked square
+					-- show clicked square
 					board = show_square(board, board_x, board_y)
 					if count_hidden(board) == mines then
-						-- Win!
+						-- all non-mines opened, win!
 						game_active = false
 						game_won = true 
 						board = show_all(board)
@@ -68,14 +72,12 @@ function love.mousepressed(x, y, button)
 
 		end
 	else
-		-- Restart game
+		-- game is not active, restart game on click
 		love.load()
    	end
 end
 
 function love.draw()
-
- 	love.graphics.setColor(170,220,250,255)
 
 	hover_x = math.floor((love.mouse.getX()-5)/square_width) + 1
 	hover_y = math.floor((love.mouse.getY()-5)/square_height) + 1
@@ -86,7 +88,8 @@ function love.draw()
  			pos_y = 5+((y-1)*square_height)
  			square = board[x][y]
  			if square.show then
-	 			-- square background
+	 			-- draw shown square
+	 			-- background
 	 			love.graphics.setColor(170,220,250,255)
 				love.graphics.rectangle("fill", pos_x, pos_y, square_width, square_height)
 	 			
@@ -94,21 +97,26 @@ function love.draw()
 	 			if square.number ~= 0 then
 	 				love.graphics.setColor(number_colors[square.number])
 	 				if square.number == 9 then
-	 					love.graphics.print("B", pos_x+7, pos_y)
+	 					-- mine
+	 					love.graphics.print("M", pos_x+7, pos_y)
 	 				else
+	 					-- number
 	 					love.graphics.print(square.number, pos_x+7, pos_y)
 	 				end
 	 			end
 	 		else
+	 			-- draw hidden square
+	 			-- background
 	 			love.graphics.setColor(95,175,250,255)
 				love.graphics.rectangle("fill", pos_x, pos_y, square_width, square_height)
 				if square.flag then
+					-- flagged square
 	 				love.graphics.setColor(number_colors[9])
 					love.graphics.print("F", pos_x+7, pos_y)
 				end
 	 		end
 	 		if game_active and x == hover_x and y == hover_y and not square.show then
-	 			-- Hover over square
+	 			-- hover over square
 	 			love.graphics.setColor(255,255,255,50)
 				love.graphics.rectangle("fill", pos_x, pos_y, square_width, square_height)	
 	 		end
@@ -119,9 +127,12 @@ function love.draw()
  		end
  	end
  	if not game_active then
+ 		-- game ended, draw splash screen
+ 		-- background
  		love.graphics.setColor(255,255,255,200)
 		love.graphics.rectangle("fill", 0, 0, love.window.getWidth(), love.window.getHeight())
 
+		-- text
  		love.graphics.setColor(0,0,0,255)
 		font = love.graphics.newFont("monofonto.ttf", 50)
 		if game_won then
