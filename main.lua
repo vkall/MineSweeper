@@ -40,6 +40,7 @@ function love.load()
 	-- game states
 	game_active = true
 	game_won = false
+	settings_menu = false
 	game_start = os.time()
 	game_end = os.time()
 end
@@ -73,6 +74,9 @@ function love.mousepressed(x, y, button)
 						end
 					end
 				end
+
+			elseif (x >= (love.window.getWidth() - 100)) and x <= (love.window.getWidth() - 10) and y >= 8 and y <= (8 + 28) then
+				settings_menu = not settings_menu
 			end
 
 		elseif button == "r" then
@@ -99,68 +103,78 @@ function love.draw()
 
 	love.graphics.setColor(255,255,255,255)
 	font = love.graphics.newFont("monofonto.ttf", 40)
-	love.graphics.printf("Mines: " .. mines , 10, 10, love.window.getWidth()-20, "left")
-	love.graphics.printf("Time: " .. os.difftime(game_end, game_start), 10, 10, love.window.getWidth()-20, "right")
+	love.graphics.printf("Mines: " .. mines .. " - Time: " .. os.difftime(game_end, game_start) , 10, 10, love.window.getWidth()-20, "left")
+	-- love.graphics.printf("Time: " .. os.difftime(game_end, game_start), 10, 10, love.window.getWidth()-20, "right")
 
+	-- Settings button
+	love.graphics.setColor(150,150,150,255)
+	love.graphics.rectangle("fill", love.window.getWidth() - 100 , 8, 90, 28)
+	love.graphics.setColor(255,255,255,255)
+	font = love.graphics.newFont("monofonto.ttf", 30)
+	love.graphics.print("Settings", love.window.getWidth() - 95 , 8)
 
- 	for x=1,board_width do
- 		pos_x = x_offset+((x-1)*square_width)
- 		for y=1,board_height do
- 			pos_y = y_offset+((y-1)*square_height)
- 			square = board[x][y]
- 			if square.show then
-	 			-- draw shown square
-	 			-- background
-	 			love.graphics.setColor(170,220,250,255)
-				love.graphics.rectangle("fill", pos_x, pos_y, square_width, square_height)
-	 			
-	 			-- square text
-	 			if square.number ~= 0 then
-	 				love.graphics.setColor(number_colors[square.number])
-	 				if square.number == 9 then
-	 					-- mine
-	 					love.graphics.print("M", pos_x+7, pos_y)
-	 				else
-	 					-- number
-	 					love.graphics.print(square.number, pos_x+7, pos_y)
-	 				end
-	 			end
-	 		else
-	 			-- draw hidden square
-	 			-- background
-	 			love.graphics.setColor(95,175,250,255)
-				love.graphics.rectangle("fill", pos_x, pos_y, square_width, square_height)
-				if square.flag then
-					-- flagged square
-	 				love.graphics.setColor(number_colors[9])
-					love.graphics.print("F", pos_x+7, pos_y)
-				end
+	if settings_menu then
+
+	else
+	 	for x=1,board_width do
+	 		pos_x = x_offset+((x-1)*square_width)
+	 		for y=1,board_height do
+	 			pos_y = y_offset+((y-1)*square_height)
+	 			square = board[x][y]
+	 			if square.show then
+		 			-- draw shown square
+		 			-- background
+		 			love.graphics.setColor(170,220,250,255)
+					love.graphics.rectangle("fill", pos_x, pos_y, square_width, square_height)
+		 			
+		 			-- square text
+		 			if square.number ~= 0 then
+		 				love.graphics.setColor(number_colors[square.number])
+		 				if square.number == 9 then
+		 					-- mine
+		 					love.graphics.print("M", pos_x+7, pos_y)
+		 				else
+		 					-- number
+		 					love.graphics.print(square.number, pos_x+7, pos_y)
+		 				end
+		 			end
+		 		else
+		 			-- draw hidden square
+		 			-- background
+		 			love.graphics.setColor(95,175,250,255)
+					love.graphics.rectangle("fill", pos_x, pos_y, square_width, square_height)
+					if square.flag then
+						-- flagged square
+		 				love.graphics.setColor(number_colors[9])
+						love.graphics.print("F", pos_x+7, pos_y)
+					end
+		 		end
+		 		if game_active and x == hover_x and y == hover_y and not square.show then
+		 			-- hover over square
+		 			love.graphics.setColor(255,255,255,50)
+					love.graphics.rectangle("fill", pos_x, pos_y, square_width, square_height)	
+		 		end
+
+	 			-- square outline
+		 		love.graphics.setColor(0,0,0,200)
+				love.graphics.rectangle("line", pos_x, pos_y, square_width, square_height)
 	 		end
-	 		if game_active and x == hover_x and y == hover_y and not square.show then
-	 			-- hover over square
-	 			love.graphics.setColor(255,255,255,50)
-				love.graphics.rectangle("fill", pos_x, pos_y, square_width, square_height)	
-	 		end
+	 	end
+	 	if not game_active then
+	 		-- game ended, draw splash screen
+	 		-- background
+	 		love.graphics.setColor(255,255,255,200)
+			love.graphics.rectangle("fill", 0, 0, love.window.getWidth(), love.window.getHeight())
 
- 			-- square outline
-	 		love.graphics.setColor(0,0,0,200)
-			love.graphics.rectangle("line", pos_x, pos_y, square_width, square_height)
- 		end
+			-- text
+	 		love.graphics.setColor(0,0,0,255)
+			font = love.graphics.newFont("monofonto.ttf", 60)
+			if game_won then
+				love.graphics.printf("YOU WON!\nclick anywhere to restart", 0, love.window.getHeight()/2 - 50, love.window.getWidth(), "center")
+			else
+				love.graphics.printf("YOU LOST!\nclick anywhere to restart", 0, love.window.getHeight()/2 - 50, love.window.getWidth(), "center")
+			end
+
+	 	end	
  	end
- 	if not game_active then
- 		-- game ended, draw splash screen
- 		-- background
- 		love.graphics.setColor(255,255,255,200)
-		love.graphics.rectangle("fill", 0, 0, love.window.getWidth(), love.window.getHeight())
-
-		-- text
- 		love.graphics.setColor(0,0,0,255)
-		font = love.graphics.newFont("monofonto.ttf", 60)
-		if game_won then
-			love.graphics.printf("YOU WON!\nclick anywhere to restart", 0, love.window.getHeight()/2 - 50, love.window.getWidth(), "center")
-		else
-			love.graphics.printf("YOU LOST!\nclick anywhere to restart", 0, love.window.getHeight()/2 - 50, love.window.getWidth(), "center")
-		end
-
- 	end	
 end
