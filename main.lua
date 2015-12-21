@@ -2,9 +2,9 @@ require "board"
 
 function love.load()
 	-- game settings
-	board_width = 15
-	board_height = 15
-	mines = 20
+	board_width = 20
+	board_height = 20
+	mines = 10
 
 	-- create board
 	board = {}
@@ -14,9 +14,13 @@ function love.load()
 	print_table(board)
 
 	-- window settings
+	love.graphics.setBackgroundColor(20,20,20,255)
 	square_width = 25
 	square_height = 25
-	love.window.setMode((square_width*board_width)+10, (square_height*board_height)+10, {resizable=false})
+	x_offset = 5
+	y_offset = 45
+
+	love.window.setMode((square_width*board_width)+(x_offset*2), (square_height*board_height)+(y_offset+x_offset), {resizable=false})
 
 	font = love.graphics.newFont("monofonto.ttf", 25)
 	love.graphics.setFont(font)
@@ -36,6 +40,8 @@ function love.load()
 	-- game states
 	game_active = true
 	game_won = false
+	game_start = os.time()
+	game_end = os.time()
 end
 
 function love.update(dt)
@@ -44,15 +50,16 @@ end
 
 function love.mousepressed(x, y, button)
    	if game_active then
-		board_x = math.floor((x-5)/square_width) + 1
-		board_y = math.floor((y-5)/square_height) + 1
+		board_x = math.floor((x-x_offset)/square_width) + 1
+		board_y = math.floor((y-y_offset)/square_height) + 1
 
 		if button == "l" then
 			if board_x > 0 and board_x <= board_width and board_y > 0 and board_y <= board_height then
 				if board[board_x][board_y].number == 9 then
-					-- clicked on mine, game over
+					-- clicked on mine, game over!
 					game_active = false
 					board = show_all(board)
+					game_end = os.time()
 				else
 					-- show clicked square
 					board = show_square(board, board_x, board_y)
@@ -61,6 +68,7 @@ function love.mousepressed(x, y, button)
 						game_active = false
 						game_won = true 
 						board = show_all(board)
+						game_end = os.time()
 					end
 				end
 			end
@@ -78,14 +86,25 @@ function love.mousepressed(x, y, button)
 end
 
 function love.draw()
+	love.graphics.clear()
 
-	hover_x = math.floor((love.mouse.getX()-5)/square_width) + 1
-	hover_y = math.floor((love.mouse.getY()-5)/square_height) + 1
+	hover_x = math.floor((love.mouse.getX()-x_offset)/square_width) + 1
+	hover_y = math.floor((love.mouse.getY()-y_offset)/square_height) + 1
+
+	if game_active then
+		game_end = os.time()
+	end
+
+	love.graphics.setColor(255,255,255,255)
+	font = love.graphics.newFont("monofonto.ttf", 40)
+	love.graphics.printf("Mines: " .. mines, 20, 10, love.window.getWidth()-40, "left")
+	love.graphics.printf("Time: " .. os.difftime(game_end, game_start), 20, 10, love.window.getWidth()-40, "right")
+
 
  	for x=1,board_width do
- 		pos_x = 5+((x-1)*square_width)
+ 		pos_x = x_offset+((x-1)*square_width)
  		for y=1,board_height do
- 			pos_y = 5+((y-1)*square_height)
+ 			pos_y = y_offset+((y-1)*square_height)
  			square = board[x][y]
  			if square.show then
 	 			-- draw shown square
@@ -134,7 +153,7 @@ function love.draw()
 
 		-- text
  		love.graphics.setColor(0,0,0,255)
-		font = love.graphics.newFont("monofonto.ttf", 50)
+		font = love.graphics.newFont("monofonto.ttf", 60)
 		if game_won then
 			love.graphics.printf("YOU WON!\nclick anywhere to restart", 0, love.window.getHeight()/2 - 50, love.window.getWidth(), "center")
 		else
