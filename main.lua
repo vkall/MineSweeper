@@ -1,5 +1,5 @@
 require "board"
-
+require "menu"
 
 -- initial game settings
 board_width = 25
@@ -37,19 +37,21 @@ end
 
 function restart() 
 
-	-- create board
 	board = init_board(board, board_width, board_height, mines)
 	print_table(board)
 
 	-- set window size based on board dimensions
 	love.window.setMode((square_width*board_width)+(x_offset*2), (square_height*board_height)+(y_offset+x_offset), {resizable=false})
 
+	init_menu()
+
 	settings_button = {
 		text = "Settings",
 		width = 90,
 		height = 28,
 		x = love.window.getWidth() - 100,
-		y = 8
+		y = 8,
+		on_click = function() game_state.show_menu = not game_state.show_menu end
 	}
 
 	-- game states
@@ -77,7 +79,9 @@ function love.mousepressed(x, y, button)
 		if x >= settings_button.x and x <= settings_button.x + settings_button.width and
 			y >= settings_button.y and y <= settings_button.y + settings_button.height then
 
-			game_state.show_menu = not game_state.show_menu
+			settings_button.on_click()
+		elseif game_state.show_menu then
+			menu_mousepressed(x, y, button)
 		else
 			board_mousepressed(x, y, button)
 		end
@@ -102,10 +106,10 @@ function love.draw()
 	end
 	love.graphics.rectangle("fill", settings_button.x , settings_button.y, settings_button.width, settings_button.height)
 	love.graphics.setColor(255,255,255,255)
-	love.graphics.print(settings_button.text, settings_button.x + 5, settings_button.y)
+	love.graphics.printf(settings_button.text, settings_button.x, settings_button.y, settings_button.width, "center")
 
 	if game_state.show_menu then
-
+		draw_menu()
 	else
 	 	draw_board()
  	end
