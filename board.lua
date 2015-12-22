@@ -260,11 +260,7 @@ function board_mousepressed(x, y, button)
 					end
 				end
 			end
-
-		elseif (x >= (love.window.getWidth() - 100)) and x <= (love.window.getWidth() - 10) and y >= 8 and y <= (8 + 28) then
-			game_state.show_menu = not game_state.show_menu
 		end
-
 	elseif button == "r" then
 		if board_x > 0 and board_x <= board_width and board_y > 0 and board_y <= board_height then
 			board[board_x][board_y].flag = not board[board_x][board_y].flag

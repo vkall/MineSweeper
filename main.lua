@@ -44,6 +44,14 @@ function restart()
 	-- set window size based on board dimensions
 	love.window.setMode((square_width*board_width)+(x_offset*2), (square_height*board_height)+(y_offset+x_offset), {resizable=false})
 
+	settings_button = {
+		text = "Settings",
+		width = 90,
+		height = 28,
+		x = love.window.getWidth() - 100,
+		y = 8
+	}
+
 	-- game states
 	game_state = {
 		active = true,
@@ -66,7 +74,13 @@ end
 
 function love.mousepressed(x, y, button)
    	if game_state.active then
-		board_mousepressed(x, y, button)
+		if x >= settings_button.x and x <= settings_button.x + settings_button.width and
+			y >= settings_button.y and y <= settings_button.y + settings_button.height then
+
+			game_state.show_menu = not game_state.show_menu
+		else
+			board_mousepressed(x, y, button)
+		end
 	else
 		-- game is not active, restart game on click
 		restart()
@@ -80,10 +94,15 @@ function love.draw()
 	love.graphics.printf("Mines: " .. mines .. " - Time: " .. os.difftime(game_end, game_start) , 10, 10, love.window.getWidth()-20, "left")
 
 	-- Settings button
-	love.graphics.setColor(150,150,150,255)
-	love.graphics.rectangle("fill", love.window.getWidth() - 100 , 8, 90, 28)
+	if love.mouse.getX() >= settings_button.x and love.mouse.getX() <= settings_button.x + settings_button.width and
+		love.mouse.getY() >= settings_button.y and love.mouse.getY() <= settings_button.y + settings_button.height then
+		love.graphics.setColor(150,150,150,255)
+	else
+		love.graphics.setColor(100,100,100,255)
+	end
+	love.graphics.rectangle("fill", settings_button.x , settings_button.y, settings_button.width, settings_button.height)
 	love.graphics.setColor(255,255,255,255)
-	love.graphics.print("Settings", love.window.getWidth() - 95 , 8)
+	love.graphics.print(settings_button.text, settings_button.x + 5, settings_button.y)
 
 	if game_state.show_menu then
 
