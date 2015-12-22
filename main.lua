@@ -27,15 +27,22 @@ number_colors = {
 
 function love.load()
 
+	love.graphics.setBackgroundColor(20,20,20,255)
+	font = love.graphics.newFont("monofonto.ttf", 25)
+	love.graphics.setFont(font)
+
+	restart()
+
+end
+
+function restart() 
+
 	-- create board
 	board = init_board(board, board_width, board_height, mines)
 	print_table(board)
 
-	love.graphics.setBackgroundColor(20,20,20,255)
+	-- set window size based on board dimensions
 	love.window.setMode((square_width*board_width)+(x_offset*2), (square_height*board_height)+(y_offset+x_offset), {resizable=false})
-
-	font = love.graphics.newFont("monofonto.ttf", 25)
-	love.graphics.setFont(font)
 
 	-- game states
 	game_state = {
@@ -45,7 +52,9 @@ function love.load()
 	}
 	game_start = os.time()
 	game_end = os.time()
+
 end
+
 
 function love.update(dt)
 
@@ -60,7 +69,7 @@ function love.mousepressed(x, y, button)
 		board_mousepressed(x, y, button)
 	else
 		-- game is not active, restart game on click
-		love.load()
+		restart()
    	end
 end
 
