@@ -4,7 +4,7 @@ local buttons = {}
 function init_menu()
 	local button_width = 100
 	local button_height = 40
-	local button_x = love.window.getWidth()/2 - button_width/2
+	local button_x = love.graphics.getWidth()/2 - button_width/2
 	local button_y = 100
 
 	local restart_button = {
@@ -38,7 +38,7 @@ function draw_menu()
 	end
 end
 
-function menu_mousepressed(x, y, button)
+function menu_mousepressed(x, y, button, istouch)
 
 	for i=1,#buttons do
 

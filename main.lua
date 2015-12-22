@@ -49,7 +49,7 @@ function restart()
 		text = "Settings",
 		width = 90,
 		height = 28,
-		x = love.window.getWidth() - 100,
+		x = love.graphics.getWidth() - 100,
 		y = 8,
 		on_click = function() game_state.show_menu = not game_state.show_menu end
 	}
@@ -74,16 +74,16 @@ function love.update(dt)
 
 end
 
-function love.mousepressed(x, y, button)
+function love.mousepressed(x, y, button, istouch)
    	if game_state.active then
 		if x >= settings_button.x and x <= settings_button.x + settings_button.width and
 			y >= settings_button.y and y <= settings_button.y + settings_button.height then
 
 			settings_button.on_click()
 		elseif game_state.show_menu then
-			menu_mousepressed(x, y, button)
+			menu_mousepressed(x, y, button, istouch)
 		else
-			board_mousepressed(x, y, button)
+			board_mousepressed(x, y, button, istouch)
 		end
 	else
 		-- game is not active, restart game on click
@@ -95,7 +95,7 @@ function love.draw()
 	love.graphics.clear()
 
 	love.graphics.setColor(255,255,255,255)
-	love.graphics.printf("Mines: " .. mines .. " - Time: " .. os.difftime(game_end, game_start) , 10, 10, love.window.getWidth()-20, "left")
+	love.graphics.printf("Mines: " .. mines .. " - Time: " .. os.difftime(game_end, game_start) , 10, 10, love.graphics.getWidth()-20, "left")
 
 	-- Settings button
 	if love.mouse.getX() >= settings_button.x and love.mouse.getX() <= settings_button.x + settings_button.width and

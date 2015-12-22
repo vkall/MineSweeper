@@ -222,25 +222,25 @@ function draw_board()
  		-- game ended, draw splash screen
  		-- background
  		love.graphics.setColor(255,255,255,200)
-		love.graphics.rectangle("fill", 0, 0, love.window.getWidth(), love.window.getHeight())
+		love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 
 		-- text
  		love.graphics.setColor(0,0,0,255)
 		if game_state.won then
-			love.graphics.printf("YOU WON!\nclick anywhere to restart", 0, love.window.getHeight()/2 - 50, love.window.getWidth(), "center")
+			love.graphics.printf("YOU WON!\nclick anywhere to restart", 0, love.graphics.getHeight()/2 - 50, love.graphics.getWidth(), "center")
 		else
-			love.graphics.printf("YOU LOST!\nclick anywhere to restart", 0, love.window.getHeight()/2 - 50, love.window.getWidth(), "center")
+			love.graphics.printf("YOU LOST!\nclick anywhere to restart", 0, love.graphics.getHeight()/2 - 50, love.graphics.getWidth(), "center")
 		end
 
  	end	
 
 end
 
-function board_mousepressed(x, y, button)
+function board_mousepressed(x, y, button, istouch)
 	local board_x = math.floor((x-x_offset)/square_width) + 1
 	local board_y = math.floor((y-y_offset)/square_height) + 1
 
-	if button == "l" then
+	if button == 1 then
 		if board_x > 0 and board_x <= board_width and board_y > 0 and board_y <= board_height then
 			if not board[board_x][board_y].flag then
 				if board[board_x][board_y].number == 9 then
@@ -261,7 +261,7 @@ function board_mousepressed(x, y, button)
 				end
 			end
 		end
-	elseif button == "r" then
+	elseif button == 2 then
 		if board_x > 0 and board_x <= board_width and board_y > 0 and board_y <= board_height then
 			board[board_x][board_y].flag = not board[board_x][board_y].flag
 		end
