@@ -91,11 +91,14 @@ function love.mousepressed(x, y, button, istouch)
    	end
 end
 
+function love.keypressed(k)
+   if k == 'escape' then
+      game_state.show_menu = not game_state.show_menu
+   end
+end
+
 function love.draw()
 	love.graphics.clear()
-
-	love.graphics.setColor(255,255,255,255)
-	love.graphics.printf("Mines: " .. mines .. " - Time: " .. os.difftime(game_end, game_start) , 10, 10, love.graphics.getWidth()-20, "left")
 
 	-- Settings button
 	if love.mouse.getX() >= settings_button.x and love.mouse.getX() <= settings_button.x + settings_button.width and
@@ -111,6 +114,8 @@ function love.draw()
 	if game_state.show_menu then
 		draw_menu()
 	else
+		love.graphics.setColor(255,255,255,255)
+		love.graphics.printf("Mines: " .. mines .. " - Time: " .. os.difftime(game_end, game_start) , 10, 10, love.graphics.getWidth()-20, "left")
 	 	draw_board()
  	end
 end
