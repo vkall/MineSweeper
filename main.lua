@@ -104,7 +104,7 @@ function love.draw()
 	else
 		love.graphics.setColor(100,100,100,255)
 	end
-	love.graphics.rectangle("fill", settings_button.x , settings_button.y, settings_button.width, settings_button.height)
+	love.graphics.rectangle("fill", settings_button.x , settings_button.y, settings_button.width, settings_button.height, 5)
 	love.graphics.setColor(255,255,255,255)
 	love.graphics.printf(settings_button.text, settings_button.x, settings_button.y, settings_button.width, "center")
 

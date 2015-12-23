@@ -2,10 +2,10 @@
 local buttons = {}
 
 function init_menu()
-	local button_width = 100
+	local button_width = 200
 	local button_height = 40
 	local button_x = love.graphics.getWidth()/2 - button_width/2
-	local button_y = 100
+	local button_y = 200
 
 	local restart_button = {
 		text = "Restart",
@@ -15,8 +15,19 @@ function init_menu()
 		y = button_y,
 		on_click = function() restart() end
 	}
-
 	table.insert(buttons, restart_button)
+
+	button_y = button_y + button_height + 10
+
+	local quit_button = {
+		text = "Quit",
+		width = button_width,
+		height = button_height,
+		x = button_x,
+		y = button_y,
+		on_click = function() love.event.quit() end
+	}
+	table.insert(buttons, quit_button)
 
 end
 
@@ -32,9 +43,9 @@ function draw_menu()
 		else
 			love.graphics.setColor(100,100,100,255)
 		end
-		love.graphics.rectangle("fill", btn.x , btn.y, btn.width, btn.height)
+		love.graphics.rectangle("fill", btn.x , btn.y, btn.width, btn.height, 5)
 		love.graphics.setColor(255,255,255,255)
-		love.graphics.printf(btn.text, btn.x, btn.y + 5, btn.width, "center")
+		love.graphics.printf(btn.text, btn.x, btn.y + 7, btn.width, "center")
 	end
 end
 
