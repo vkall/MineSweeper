@@ -2,9 +2,9 @@ require "board"
 require "menu"
 
 -- initial game settings
-board_width = 25
-board_height = 25
-mines = 40
+board_width = 15
+board_height = 15
+mines = 20
 board = {}
 
 -- window settings
@@ -40,8 +40,16 @@ function restart()
 	board = init_board(board, board_width, board_height, mines)
 	print_table(board)
 
+	x_offset = 5
+
 	-- set window size based on board dimensions
-	love.window.setMode((square_width*board_width)+(x_offset*2), (square_height*board_height)+(y_offset+x_offset), {resizable=false})
+	local w = math.max(350, (square_width*board_width)+(x_offset*2))
+	local h = math.max(350, (square_height*board_height)+(y_offset+5))
+	love.window.setMode(w, h, {resizable=false})
+
+	if w == 350 then
+		x_offset = (350 - (square_width*board_width)) / 2
+	end
 
 	init_menu()
 

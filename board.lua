@@ -3,6 +3,7 @@ function init_board(table, t_width, t_height, nr_mines)
 	-- Init board 
 	-- All values set to {show = false, number = 0, flag = false}
 	table = {}
+	flagged = 0
 	for x = 1, t_width do
 		table[x] = {}
 		for y = 1, t_height do

@@ -6,7 +6,7 @@ function init_menu()
 	local button_width = 200
 	local button_height = 40
 	local button_x = love.graphics.getWidth()/2 - button_width/2
-	local button_y = 200
+	local button_y = 70
 
 	local setting_width = 20
 	local setting_x = button_x + button_width - setting_width
