@@ -2,7 +2,7 @@
 function init_board(table, t_width, t_height, nr_mines)
 	-- Init board 
 	-- All values set to {show = false, number = 0, flag = false}
-
+	table = {}
 	for x = 1, t_width do
 		table[x] = {}
 		for y = 1, t_height do
@@ -93,7 +93,7 @@ function print_table(table)
 	io.write("\n")
 	for x = 1, #table do
 		for y = 1, #table[x] do
-			io.write(table[y][x].number .. " ")
+			io.write(table[x][y].number .. " ")
 		end
 		io.write("\n")
 	end
