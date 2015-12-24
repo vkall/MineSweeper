@@ -3,7 +3,6 @@ function init_board(table, t_width, t_height, nr_mines)
 	-- Init board 
 	-- All values set to {show = false, number = 0, flag = false}
 	table = {}
-	flagged = 0
 	for x = 1, t_width do
 		table[x] = {}
 		for y = 1, t_height do
@@ -170,6 +169,20 @@ function count_hidden(table)
 	return count
 end
 
+function count_flags(table)
+	-- return the number of hidden squares
+	
+	local count = 0
+	for x = 1, #table do
+		for y = 1, #table[x] do
+			if not table[x][y].show and table[x][y].flag then
+				count = count + 1
+			end
+		end
+	end
+	return count
+end
+
 function draw_board()
 
 	local hover_x = math.floor((love.mouse.getX()-x_offset)/square_width) + 1
@@ -265,8 +278,8 @@ function board_mousepressed(x, y, button, istouch)
 	elseif button == 2 then
 		if board_x > 0 and board_x <= board_width and board_y > 0 and board_y <= board_height then
 			board[board_x][board_y].flag = not board[board_x][board_y].flag
+			flags = count_flags(board)
 		end
-
 	end
 end
 

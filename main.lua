@@ -6,6 +6,7 @@ board_width = 15
 board_height = 15
 mines = 20
 board = {}
+flags = 0
 
 -- window settings
 square_width = 25
@@ -39,16 +40,17 @@ function restart()
 
 	board = init_board(board, board_width, board_height, mines)
 	print_table(board)
+	flags = 0
 
 	x_offset = 5
 
 	-- set window size based on board dimensions
-	local w = math.max(350, (square_width*board_width)+(x_offset*2))
-	local h = math.max(350, (square_height*board_height)+(y_offset+5))
+	local w = math.max(400, (square_width*board_width)+(x_offset*2))
+	local h = math.max(400, (square_height*board_height)+(y_offset+5))
 	love.window.setMode(w, h, {resizable=false})
 
-	if w == 350 then
-		x_offset = (350 - (square_width*board_width)) / 2
+	if w == 400 then
+		x_offset = (400 - (square_width*board_width)) / 2
 	end
 
 	init_menu()
@@ -123,7 +125,7 @@ function love.draw()
 		draw_menu()
 	else
 		love.graphics.setColor(255,255,255,255)
-		love.graphics.printf("Mines: " .. mines .. " - Time: " .. os.difftime(game_end, game_start) , 10, 10, love.graphics.getWidth()-20, "left")
+		love.graphics.printf("Mines:" .. mines .. " Flags:" .. flags .. " Time:" .. os.difftime(game_end, game_start) , 10, 10, love.graphics.getWidth()-20, "left")
 	 	draw_board()
  	end
 end
